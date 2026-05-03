@@ -9,7 +9,7 @@ namespace backend.Controllers;
 
 [ApiController]
 [Route("api/fleet")]
-[Authorize]
+[Authorize(Roles = "Admin,DepotManager")]
 public class FleetController : ControllerBase
 {
     private readonly AppDbContext _db;

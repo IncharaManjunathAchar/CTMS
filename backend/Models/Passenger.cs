@@ -9,4 +9,6 @@ public class Passenger
     public string PasswordHash { get; set; } = string.Empty;
     public string PassengerType { get; set; } = "Regular"; // Student, SeniorCitizen, DifferentlyAbled, Regular
     public DateTime RegisteredAt { get; set; } = DateTime.UtcNow;
+
+    public ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
 }

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\github\\CTMS\\backend\\backend.csproj": {}
+    "e:\\github\\CTMS\\backend\\backend.csproj": {}
   },
   "projects": {
-    "E:\\github\\CTMS\\backend\\backend.csproj": {
+    "e:\\github\\CTMS\\backend\\backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\github\\CTMS\\backend\\backend.csproj",
+        "projectUniqueName": "e:\\github\\CTMS\\backend\\backend.csproj",
         "projectName": "backend",
-        "projectPath": "E:\\github\\CTMS\\backend\\backend.csproj",
+        "projectPath": "e:\\github\\CTMS\\backend\\backend.csproj",
         "packagesPath": "C:\\Users\\dell\\.nuget\\packages\\",
-        "outputPath": "E:\\github\\CTMS\\backend\\obj\\",
+        "outputPath": "e:\\github\\CTMS\\backend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\dell\\AppData\\Roaming\\NuGet\\NuGet.Config"

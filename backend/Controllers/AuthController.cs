@@ -33,6 +33,9 @@ public class AuthController : ControllerBase
         if (await _db.Passengers.AnyAsync(p => p.MobileNumber == dto.MobileNumber))
             return BadRequest("Mobile number already registered.");
 
+        var passengerRole = await _db.Roles.FirstOrDefaultAsync(r => r.RoleName == "Passenger");
+        if (passengerRole == null) return StatusCode(500, "Role configuration error.");
+
         var passenger = new Passenger
         {
             Name = dto.Name,
@@ -44,18 +47,26 @@ public class AuthController : ControllerBase
 
         _db.Passengers.Add(passenger);
         await _db.SaveChangesAsync();
+
+        _db.UserRoles.Add(new UserRole { PassengerId = passenger.Id, RoleId = passengerRole.Id });
+        await _db.SaveChangesAsync();
+
         return Ok("Registration successful.");
     }
 
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginDto dto)
     {
-        var passenger = await _db.Passengers.FirstOrDefaultAsync(p => p.Email == dto.Email);
+        var passenger = await _db.Passengers
+            .Include(p => p.UserRoles).ThenInclude(ur => ur.Role)
+            .FirstOrDefaultAsync(p => p.Email == dto.Email);
+
         if (passenger == null || !BCrypt.Net.BCrypt.Verify(dto.Password, passenger.PasswordHash))
             return Unauthorized("Invalid credentials.");
 
-        var token = GenerateToken(passenger);
-        return Ok(new AuthResponseDto(token, passenger.Name, passenger.Email, passenger.PassengerType));
+        var roleName = passenger.UserRoles.FirstOrDefault()?.Role.RoleName ?? "Passenger";
+        var token = GenerateToken(passenger, roleName);
+        return Ok(new AuthResponseDto(token, passenger.Name, passenger.Email, passenger.PassengerType, roleName));
     }
 
     [Authorize]
@@ -63,10 +74,13 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> GetProfile()
     {
         var id = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-        var passenger = await _db.Passengers.FindAsync(id);
+        var passenger = await _db.Passengers
+            .Include(p => p.UserRoles).ThenInclude(ur => ur.Role)
+            .FirstOrDefaultAsync(p => p.Id == id);
         if (passenger == null) return NotFound();
 
-        return Ok(new { passenger.Id, passenger.Name, passenger.Email, passenger.MobileNumber, passenger.PassengerType, passenger.RegisteredAt });
+        var role = passenger.UserRoles.FirstOrDefault()?.Role.RoleName ?? "Passenger";
+        return Ok(new { passenger.Id, passenger.Name, passenger.Email, passenger.MobileNumber, passenger.PassengerType, Role = role, passenger.RegisteredAt });
     }
 
     [Authorize]
@@ -84,7 +98,7 @@ public class AuthController : ControllerBase
         return Ok("Profile updated.");
     }
 
-    private string GenerateToken(Passenger passenger)
+    private string GenerateToken(Passenger passenger, string role)
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -92,7 +106,8 @@ public class AuthController : ControllerBase
         {
             new Claim(ClaimTypes.NameIdentifier, passenger.Id.ToString()),
             new Claim(ClaimTypes.Email, passenger.Email),
-            new Claim(ClaimTypes.Name, passenger.Name)
+            new Claim(ClaimTypes.Name, passenger.Name),
+            new Claim(ClaimTypes.Role, role)
         };
 
         var token = new JwtSecurityToken(

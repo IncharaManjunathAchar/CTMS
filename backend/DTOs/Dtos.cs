@@ -4,7 +4,7 @@ namespace backend.DTOs;
 public record RegisterDto(string Name, string Email, string MobileNumber, string Password, string PassengerType);
 public record LoginDto(string Email, string Password);
 public record UpdateProfileDto(string Name, string MobileNumber, string PassengerType);
-public record AuthResponseDto(string Token, string Name, string Email, string PassengerType);
+public record AuthResponseDto(string Token, string Name, string Email, string PassengerType, string Role);
 
 // ── ROUTE ─────────────────────────────────────────────
 public record RouteDto(string RouteName, string Source, string Destination, double TotalDistance);

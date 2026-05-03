@@ -14,7 +14,7 @@ public class RouteController : ControllerBase
     private readonly AppDbContext _db;
     public RouteController(AppDbContext db) => _db = db;
 
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> AddRoute(RouteDto dto)
     {

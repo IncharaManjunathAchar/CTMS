@@ -55,6 +55,10 @@ public class AppDbContext : DbContext
     // AS
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
 
+    // RBAC
+    public DbSet<Role> Roles => Set<Role>();
+    public DbSet<UserRole> UserRoles => Set<UserRole>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // Passenger unique indexes
@@ -167,5 +171,23 @@ public class AppDbContext : DbContext
 
         // AuditLog index
         modelBuilder.Entity<AuditLog>().HasIndex(a => new { a.UserId, a.Timestamp });
+
+        // RBAC
+        modelBuilder.Entity<Role>().HasIndex(r => r.RoleName).IsUnique();
+        modelBuilder.Entity<UserRole>()
+            .HasOne(ur => ur.Passenger).WithMany(p => p.UserRoles).HasForeignKey(ur => ur.PassengerId).OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<UserRole>()
+            .HasOne(ur => ur.Role).WithMany(r => r.UserRoles).HasForeignKey(ur => ur.RoleId).OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<UserRole>()
+            .HasIndex(ur => new { ur.PassengerId, ur.RoleId }).IsUnique();
+
+        // Seed default roles
+        modelBuilder.Entity<Role>().HasData(
+            new Role { Id = 1, RoleName = "Admin" },
+            new Role { Id = 2, RoleName = "Passenger" },
+            new Role { Id = 3, RoleName = "Driver" },
+            new Role { Id = 4, RoleName = "Conductor" },
+            new Role { Id = 5, RoleName = "DepotManager" }
+        );
     }
 }

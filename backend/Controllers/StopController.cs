@@ -14,7 +14,7 @@ public class StopController : ControllerBase
     private readonly AppDbContext _db;
     public StopController(AppDbContext db) => _db = db;
 
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> AddStop(StopDto dto)
     {
@@ -32,7 +32,7 @@ public class StopController : ControllerBase
         return Ok(new { stop.Id, stop.StopName, stop.Latitude, stop.Longitude });
     }
 
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpPost("{routeId}/stops")]
     public async Task<IActionResult> LinkStopToRoute(int routeId, LinkStopDto dto)
     {

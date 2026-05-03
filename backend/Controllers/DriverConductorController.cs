@@ -9,7 +9,7 @@ namespace backend.Controllers;
 
 [ApiController]
 [Route("api/staff")]
-[Authorize]
+[Authorize(Roles = "Admin")]
 public class DriverConductorController : ControllerBase
 {
     private readonly AppDbContext _db;

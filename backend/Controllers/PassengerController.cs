@@ -10,7 +10,7 @@ namespace backend.Controllers;
 
 [ApiController]
 [Route("api/passenger")]
-[Authorize]
+[Authorize(Roles = "Passenger")]
 public class PassengerController : ControllerBase
 {
     private readonly AppDbContext _db;

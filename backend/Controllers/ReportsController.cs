@@ -7,7 +7,7 @@ namespace backend.Controllers;
 
 [ApiController]
 [Route("api/reports")]
-[Authorize]
+[Authorize(Roles = "Admin")]
 public class ReportsController : ControllerBase
 {
     private readonly AppDbContext _db;

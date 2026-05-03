@@ -44,6 +44,25 @@ public class IncidentResponse
     public Incident Incident { get; set; } = null!;
 }
 
+// RBAC
+public class Role
+{
+    public int Id { get; set; }
+    public string RoleName { get; set; } = string.Empty; // Admin, Passenger, Driver, Conductor, DepotManager
+    public ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
+}
+
+public class UserRole
+{
+    public int Id { get; set; }
+    public int PassengerId { get; set; }
+    public int RoleId { get; set; }
+    public DateTime AssignedAt { get; set; } = DateTime.UtcNow;
+
+    public Passenger Passenger { get; set; } = null!;
+    public Role Role { get; set; } = null!;
+}
+
 // AS - Admin
 public class AuditLog
 {

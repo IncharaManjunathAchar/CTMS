@@ -14,7 +14,7 @@ public class GpsController : ControllerBase
     private readonly AppDbContext _db;
     public GpsController(AppDbContext db) => _db = db;
 
-    [Authorize]
+    [Authorize(Roles = "Driver")]
     [HttpPost("location")]
     public async Task<IActionResult> UpdateLocation(BusLocationDto dto)
     {
@@ -35,7 +35,7 @@ public class GpsController : ControllerBase
         return Ok(new { location.BusId, location.Latitude, location.Longitude, location.Speed, location.RecordedAt });
     }
 
-    [Authorize]
+    [Authorize(Roles = "Admin,Driver")]
     [HttpPost("eta")]
     public async Task<IActionResult> SetEta(EtaRequestDto dto)
     {

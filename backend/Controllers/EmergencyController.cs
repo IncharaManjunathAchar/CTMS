@@ -9,7 +9,7 @@ namespace backend.Controllers;
 
 [ApiController]
 [Route("api/emergency")]
-[Authorize]
+[Authorize(Roles = "Admin,Driver")]
 public class EmergencyController : ControllerBase
 {
     private readonly AppDbContext _db;

@@ -25,7 +25,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly",        policy => policy.RequireRole("Admin"));
+    options.AddPolicy("PassengerOnly",    policy => policy.RequireRole("Passenger"));
+    options.AddPolicy("DriverOnly",       policy => policy.RequireRole("Driver"));
+    options.AddPolicy("ConductorOnly",    policy => policy.RequireRole("Conductor"));
+    options.AddPolicy("DepotManagerOnly", policy => policy.RequireRole("DepotManager"));
+});
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -48,6 +55,29 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 var app = builder.Build();
+
+// Seed default admin user
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
+
+    var adminRole = db.Roles.FirstOrDefault(r => r.RoleName == "Admin");
+    if (adminRole != null && !db.UserRoles.Any(ur => ur.RoleId == adminRole.Id))
+    {
+        var admin = new backend.Models.Passenger
+        {
+            Name = "Admin",
+            Email = "admin@ctms.com",
+            MobileNumber = "0000000000",
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin@123")
+        };
+        db.Passengers.Add(admin);
+        db.SaveChanges();
+        db.UserRoles.Add(new backend.Models.UserRole { PassengerId = admin.Id, RoleId = adminRole.Id });
+        db.SaveChanges();
+    }
+}
 
 if (app.Environment.IsDevelopment())
 {

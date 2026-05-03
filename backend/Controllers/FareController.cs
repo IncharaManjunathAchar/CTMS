@@ -14,7 +14,7 @@ public class FareController : ControllerBase
     private readonly AppDbContext _db;
     public FareController(AppDbContext db) => _db = db;
 
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpPost("rules")]
     public async Task<IActionResult> AddFareRule(FareRuleDto dto)
     {
@@ -52,7 +52,7 @@ public class FareController : ControllerBase
         return Ok(new { BoardingStop = boarding.StopName, AlightingStop = alighting.StopName, DistanceKm = Math.Round(distanceKm, 2), Fare = Math.Round(fare, 2), dto.PassengerCategory });
     }
 
-    [Authorize]
+    [Authorize(Roles = "Conductor,Admin")]
     [HttpPost("tickets")]
     public async Task<IActionResult> GenerateTicket(TicketDto dto)
     {
@@ -82,7 +82,7 @@ public class FareController : ControllerBase
         return Ok(new { ticket.Id, ticket.FareAmount, ticket.IssuedAt, ticket.PaymentMode });
     }
 
-    [Authorize]
+    [Authorize(Roles = "Passenger,Admin")]
     [HttpPost("passes")]
     public async Task<IActionResult> PurchasePass(PassDto dto)
     {
@@ -103,7 +103,7 @@ public class FareController : ControllerBase
         return Ok(new { pass.Id, pass.PassType, pass.ValidTo, IsValid = true });
     }
 
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpPost("transactions")]
     public async Task<IActionResult> StoreTransaction(TransactionDto dto)
     {
