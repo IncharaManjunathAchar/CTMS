@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "e:\\github\\CTMS\\backend\\backend.csproj": {}
+    "C:\\Users\\Pavithra\\CTMS\\backend\\backend.csproj": {}
   },
   "projects": {
-    "e:\\github\\CTMS\\backend\\backend.csproj": {
+    "C:\\Users\\Pavithra\\CTMS\\backend\\backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "e:\\github\\CTMS\\backend\\backend.csproj",
+        "projectUniqueName": "C:\\Users\\Pavithra\\CTMS\\backend\\backend.csproj",
         "projectName": "backend",
-        "projectPath": "e:\\github\\CTMS\\backend\\backend.csproj",
-        "packagesPath": "C:\\Users\\dell\\.nuget\\packages\\",
-        "outputPath": "e:\\github\\CTMS\\backend\\obj\\",
+        "projectPath": "C:\\Users\\Pavithra\\CTMS\\backend\\backend.csproj",
+        "packagesPath": "C:\\Users\\Pavithra\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Pavithra\\CTMS\\backend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\dell\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Pavithra\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -37,7 +37,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "10.0.100"
       },
       "frameworks": {
         "net8.0": {
@@ -89,7 +90,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.416/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.101/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
